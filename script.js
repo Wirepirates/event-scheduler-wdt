@@ -12,9 +12,10 @@ const firebaseConfig = {
     measurementId: "G-YJPQVVPND0"
 };
 
-// Initialize Firebase
+// Initialize Firebase and Firestore
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+export { db };  // ✅ This ensures App.js can import `db`
 
 const eventForm = document.getElementById("event-form");
 const eventList = document.getElementById("event-list");
@@ -43,9 +44,9 @@ eventForm.addEventListener("submit", async (e) => {
 // Load and display events from Firestore
 onSnapshot(collection(db, "events"), (snapshot) => {
     eventList.innerHTML = ""; // Clear current list
-    snapshot.forEach((doc) => {
-        const data = doc.data();
-        const id = doc.id;
+    snapshot.forEach((docSnap) => {
+        const data = docSnap.data();
+        const id = docSnap.id;
 
         const li = document.createElement("li");
         li.innerHTML = `
