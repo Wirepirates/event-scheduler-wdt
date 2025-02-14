@@ -1,58 +1,212 @@
+/* General Styling */
 body {
     font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
     margin: 20px;
+    color: #333;
 }
+
+/* Make focus elements visible for accessibility */
+button:focus,
+input:focus {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Form Styling */
 form {
-    margin-bottom: 20px;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
 }
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Event List */
 ul {
     list-style: none;
     padding: 0;
 }
+
+/* Event Item Layout */
 li {
+    background: #fff;
+    padding: 15px;
     margin: 10px 0;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-button {
-    margin-left: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
 }
 
+/* Event Details */
+.event-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Row for event details */
+.event-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* Button Layout - New Row Below */
+.event-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Button Styling */
+button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* Button Focus for Accessibility */
+button:focus {
+    outline: 3px solid #007bff;
+}
+
+/* Primary Buttons */
+button[type="submit"],
+#login-btn,
+#signup-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+/* Edit Button */
+button.edit-btn {
+    background-color: #ffc107;
+    color: black;
+}
+
+/* Delete Button */
+button.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Logout Button */
+#logout-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+/* Chatbot */
 #chatbot-container {
-    width: 300px;
-    border: 1px solid 
-#ccc;
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid #ccc;
     padding: 10px;
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background: 
-white;
-    box-shadow: 0px 4px 6px 
-rgba(0, 0, 0, 0.1);
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
+/* Make chat history scrollable */
 #chat-history {
     height: 200px;
     overflow-y: auto;
-    border-bottom: 1px solid 
-#ccc;
+    border-bottom: 1px solid #ccc;
     margin-bottom: 10px;
     padding: 5px;
 }
 
 #chat-input {
     width: calc(100% - 60px);
-    padding: 5px;
+    padding: 8px;
     margin-right: 5px;
 }
 
+/* Chatbot Send Button */
 #send-btn {
-    padding: 5px 10px;
-    cursor: pointer;
+    background-color: #007bff;
+    color: white;
 }
 
-.history {
-	padding-bottom: 15px;
+/* Responsive Design */
+@media (max-width: 768px) {
+    body {
+        margin: 10px;
+    }
+
+    form {
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    /* Stack event details and buttons properly */
+    .event-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .event-buttons {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    /* Adjust chatbot position */
+    #chatbot-container {
+        position: static;
+        margin-top: 20px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .event-buttons {
+        justify-content: flex-start;
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    button {
+        width: 100%;
+        text-align: center;
+    }
 }

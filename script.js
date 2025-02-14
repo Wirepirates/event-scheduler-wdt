@@ -1,5 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-auth.js";
 
 // Firebase Configuration
 const firebaseConfig = {
@@ -12,15 +13,73 @@ const firebaseConfig = {
     measurementId: "G-YJPQVVPND0"
 };
 
-// Initialize Firebase and Firestore
+// Initialize Firebase and Services
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-export { db };  // ✅ This ensures App.js can import `db`
+const auth = getAuth(app);
 
+export { db, auth };
+
+// Authentication Elements
+const loginBtn = document.getElementById("login-btn");
+const signupBtn = document.getElementById("signup-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const authContainer = document.getElementById("auth-container");
+const appContainer = document.getElementById("app-container");
+
+// Handle Login
+loginBtn.addEventListener("click", async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+        console.log("User logged in");
+    } catch (error) {
+        alert("Login Failed: " + error.message);
+    }
+});
+
+// Handle Signup
+signupBtn.addEventListener("click", async () => {
+    const email = emailInput.value;
+    const password = passwordInput.value;
+    try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        console.log("User signed up");
+    } catch (error) {
+        alert("Signup Failed: " + error.message);
+    }
+});
+
+// Handle Logout
+logoutBtn.addEventListener("click", async () => {
+    try {
+        await signOut(auth);
+        console.log("User logged out");
+    } catch (error) {
+        alert("Logout Failed: " + error.message);
+    }
+});
+
+// Check Auth State
+onAuthStateChanged(auth, (user) => {
+    if (user) {
+        authContainer.style.display = "none";
+        appContainer.style.display = "block";
+        logoutBtn.style.display = "block";
+    } else {
+        authContainer.style.display = "block";
+        appContainer.style.display = "none";
+        logoutBtn.style.display = "none";
+    }
+});
+
+// Event Management
 const eventForm = document.getElementById("event-form");
 const eventList = document.getElementById("event-list");
 
-// Add Event to Firestore
 eventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const eventName = document.getElementById("event-name").value;
@@ -41,9 +100,8 @@ eventForm.addEventListener("submit", async (e) => {
     eventForm.reset();
 });
 
-// Load and display events from Firestore
 onSnapshot(collection(db, "events"), (snapshot) => {
-    eventList.innerHTML = ""; // Clear current list
+    eventList.innerHTML = "";
     snapshot.forEach((docSnap) => {
         const data = docSnap.data();
         const id = docSnap.id;
@@ -58,15 +116,13 @@ onSnapshot(collection(db, "events"), (snapshot) => {
     });
 });
 
-// Edit an event
 window.editEvent = async (id, currentName, currentTime) => {
     const newName = prompt("Edit Event Name:", currentName);
     const newTime = prompt("Edit Event Time (YYYY-MM-DDTHH:MM):", currentTime);
 
     if (newName && newTime) {
         try {
-            const eventDoc = doc(db, "events", id);
-            await updateDoc(eventDoc, { name: newName, time: newTime });
+            await updateDoc(doc(db, "events", id), { name: newName, time: newTime });
             console.log("Event updated successfully");
         } catch (error) {
             console.error("Error updating event:", error);
@@ -76,7 +132,6 @@ window.editEvent = async (id, currentName, currentTime) => {
     }
 };
 
-// Delete an event
 window.deleteEvent = async (id) => {
     if (confirm("Are you sure you want to delete this event?")) {
         try {

@@ -5,29 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Scheduler</title>
     <link rel="stylesheet" href="style.css">
-
     <script type="module">
         import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai";
         window.GoogleGenerativeAI = GoogleGenerativeAI;
     </script>
-    
 </head>
 <body>
-    <h1>Event Scheduler</h1>
-    <form id="event-form">
-        <input type="text" id="event-name" placeholder="Event Name" required>
-        <input type="datetime-local" id="event-time" required>
-        <button type="submit">Add Event</button>
-    </form>
-    
-    <h2>Scheduled Events</h2>
-    <ul id="event-list"></ul>
 
-    <!-- Chatbot Section -->
-    <div id="chatbot-container">
-        <div id="chat-history"></div>
-        <input type="text" id="chat-input" placeholder="Type a message...">
-        <button id="send-btn">Send</button>
+    <h1>Event Scheduler</h1>
+
+    <!-- Authentication Section -->
+    <div id="auth-container">
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Password" required>
+        <button id="login-btn">Login</button>
+        <button id="signup-btn">Sign Up</button>
+        <button id="logout-btn" style="display:none;">Logout</button>
+    </div>
+
+    <!-- Event Scheduler (Hidden until authenticated) -->
+    <div id="app-container" style="display: none;">
+        <form id="event-form">
+            <input type="text" id="event-name" placeholder="Event Name" required>
+            <input type="datetime-local" id="event-time" required>
+            <button type="submit">Add Event</button>
+        </form>
+        
+        <h2>Scheduled Events</h2>
+        <ul id="event-list"></ul>
+
+        <!-- Chatbot Section -->
+        <div id="chatbot-container">
+            <div id="chat-history"></div>
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-btn">Send</button>
+        </div>
     </div>
 
     <script type="module" src="script.js"></script>
