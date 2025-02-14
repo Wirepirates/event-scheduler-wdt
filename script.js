@@ -86,13 +86,13 @@ eventForm.addEventListener("submit", async (e) => {
     const eventTime = document.getElementById("event-time").value;
 
     if (!eventName || !eventTime) {
-        console.error("Event name or time is missing.");
+        alert("Please fill in all fields.");
         return;
     }
 
     try {
         await addDoc(collection(db, "events"), { name: eventName, time: eventTime });
-        console.log("Event added successfully");
+        console.log("Event added successfully:", eventName, eventTime);
     } catch (error) {
         console.error("Error adding event:", error);
     }

@@ -5,10 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Scheduler</title>
     <link rel="stylesheet" href="style.css">
-    <script type="module">
-        import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai";
-        window.GoogleGenerativeAI = GoogleGenerativeAI;
-    </script>
 </head>
 <body>
 
@@ -27,7 +23,7 @@
     <div id="app-container" style="display: none;">
         <form id="event-form">
             <input type="text" id="event-name" placeholder="Event Name" required>
-            <input type="datetime-local" id="event-time" required>
+            <input type="datetime-local" id="event-time" step="60" required> <!-- Updated input -->
             <button type="submit">Add Event</button>
         </form>
         
