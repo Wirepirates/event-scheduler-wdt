@@ -1,4 +1,3 @@
-/* General Styling */
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
@@ -31,6 +30,27 @@ input {
     border-radius: 5px;
     flex: 1;
     min-width: 200px;
+}
+
+/* Scrollable Time Picker */
+.time-picker select {
+    height: 40px;
+    width: 60px;
+    overflow-y: auto;
+    font-size: 16px;
+    text-align: center;
+    scrollbar-width: thin; /* Works in Firefox */
+    scrollbar-color: #007bff #f4f4f9;
+}
+
+/* Force scrollbars in WebKit browsers (Chrome, Edge, Safari) */
+.time-picker select::-webkit-scrollbar {
+    width: 6px;
+}
+
+.time-picker select::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 3px;
 }
 
 /* Event List */
@@ -93,37 +113,6 @@ button:hover {
     transform: scale(1.05);
 }
 
-/* Button Focus for Accessibility */
-button:focus {
-    outline: 3px solid #007bff;
-}
-
-/* Primary Buttons */
-button[type="submit"],
-#login-btn,
-#signup-btn {
-    background-color: #28a745;
-    color: white;
-}
-
-/* Edit Button */
-button.edit-btn {
-    background-color: #ffc107;
-    color: black;
-}
-
-/* Delete Button */
-button.delete-btn {
-    background-color: #dc3545;
-    color: white;
-}
-
-/* Logout Button */
-#logout-btn {
-    background-color: #007bff;
-    color: white;
-}
-
 /* Chatbot */
 #chatbot-container {
     width: 100%;
@@ -136,77 +125,4 @@ button.delete-btn {
     background: white;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-}
-
-/* Make chat history scrollable */
-#chat-history {
-    height: 200px;
-    overflow-y: auto;
-    border-bottom: 1px solid #ccc;
-    margin-bottom: 10px;
-    padding: 5px;
-}
-
-#chat-input {
-    width: calc(100% - 60px);
-    padding: 8px;
-    margin-right: 5px;
-}
-
-/* Chatbot Send Button */
-#send-btn {
-    background-color: #007bff;
-    color: white;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-    body {
-        margin: 10px;
-    }
-
-    form {
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    input {
-        width: 100%;
-    }
-
-    /* Stack event details and buttons properly */
-    .event-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .event-buttons {
-        width: 100%;
-        margin-top: 5px;
-    }
-
-    /* Adjust chatbot position */
-    #chatbot-container {
-        position: static;
-        margin-top: 20px;
-        width: 100%;
-    }
-}
-
-@media (max-width: 480px) {
-    li {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-
-    .event-buttons {
-        justify-content: flex-start;
-        width: 100%;
-        margin-top: 5px;
-    }
-
-    button {
-        width: 100%;
-        text-align: center;
-    }
 }

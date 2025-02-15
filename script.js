@@ -80,16 +80,44 @@ onAuthStateChanged(auth, (user) => {
 const eventForm = document.getElementById("event-form");
 const eventList = document.getElementById("event-list");
 
+// Populate Time Dropdowns
+document.addEventListener("DOMContentLoaded", function () {
+    const hourSelector = document.getElementById("hour-selector");
+    const minuteSelector = document.getElementById("minute-selector");
+
+    if (hourSelector && minuteSelector) {
+        // Populate hours (0-23)
+        for (let i = 0; i < 24; i++) {
+            let hour = document.createElement("option");
+            hour.value = i.toString().padStart(2, "0");
+            hour.textContent = i.toString().padStart(2, "0");
+            hourSelector.appendChild(hour);
+        }
+
+        // Populate minutes (0-59)
+        for (let i = 0; i < 60; i++) {
+            let minute = document.createElement("option");
+            minute.value = i.toString().padStart(2, "0");
+            minute.textContent = i.toString().padStart(2, "0");
+            minuteSelector.appendChild(minute);
+        }
+    }
+});
+
+// Handle Event Submission
 eventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const eventName = document.getElementById("event-name").value;
-    const eventTime = document.getElementById("event-time").value;
+    const eventDate = document.getElementById("event-date").value;
+    const eventHour = document.getElementById("hour-selector").value;
+    const eventMinute = document.getElementById("minute-selector").value;
 
-    if (!eventName || !eventTime) {
+    if (!eventName || !eventDate || eventHour === "" || eventMinute === "") {
         alert("Please fill in all fields.");
         return;
     }
 
+    const eventTime = `${eventDate}T${eventHour}:${eventMinute}:00`;
     try {
         await addDoc(collection(db, "events"), { name: eventName, time: eventTime });
         console.log("Event added successfully:", eventName, eventTime);
@@ -100,6 +128,7 @@ eventForm.addEventListener("submit", async (e) => {
     eventForm.reset();
 });
 
+// Display Events from Firestore
 onSnapshot(collection(db, "events"), (snapshot) => {
     eventList.innerHTML = "";
     snapshot.forEach((docSnap) => {
@@ -116,6 +145,7 @@ onSnapshot(collection(db, "events"), (snapshot) => {
     });
 });
 
+// Edit Event
 window.editEvent = async (id, currentName, currentTime) => {
     const newName = prompt("Edit Event Name:", currentName);
     const newTime = prompt("Edit Event Time (YYYY-MM-DDTHH:MM):", currentTime);
@@ -132,6 +162,7 @@ window.editEvent = async (id, currentName, currentTime) => {
     }
 };
 
+// Delete Event
 window.deleteEvent = async (id) => {
     if (confirm("Are you sure you want to delete this event?")) {
         try {
