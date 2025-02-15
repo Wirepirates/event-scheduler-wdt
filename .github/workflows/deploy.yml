@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main  # Run workflow on push to main
-  pull_request:
-    branches:
-      - main  # Run workflow on pull request to main
 
 jobs:
   deploy:
@@ -20,4 +17,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .  # Deploy everything from root directory
+          publish_dir: .  # Make sure this is correct
