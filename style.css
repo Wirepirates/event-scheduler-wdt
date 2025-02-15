@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 20px;
+    color: #333;
+}
+
+/* Make focus elements visible for accessibility */
+button:focus,
+input:focus {
+    outline: 3px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Form Styling */
+form {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Scrollable Time Picker */
+.time-picker select {
+    height: 40px;
+    width: 60px;
+    overflow-y: auto;
+    font-size: 16px;
+    text-align: center;
+    scrollbar-width: thin; /* Works in Firefox */
+    scrollbar-color: #007bff #f4f4f9;
+}
+
+/* Force scrollbars in WebKit browsers (Chrome, Edge, Safari) */
+.time-picker select::-webkit-scrollbar {
+    width: 6px;
+}
+
+.time-picker select::-webkit-scrollbar-thumb {
+    background: #007bff;
+    border-radius: 3px;
+}
+
+/* Event List */
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+/* Event Item Layout */
+li {
+    background: #fff;
+    padding: 15px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+/* Event Details */
+.event-item {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+/* Row for event details */
+.event-row {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+/* Button Layout - New Row Below */
+.event-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* Button Styling */
+button {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+}
+
+button:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
+/* Chatbot */
+#chatbot-container {
+    width: 100%;
+    max-width: 350px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
