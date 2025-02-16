@@ -91,18 +91,14 @@ biometricBtn.addEventListener("click", async () => {
     }
 
     try {
-        const challenge = new Uint8Array(32); // Random challenge
+        const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
 
         const credential = await navigator.credentials.get({
             publicKey: {
                 challenge: challenge,
-                allowCredentials: [{
-                    type: "public-key",
-                    id: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), // Dummy ID
-                    transports: ["internal"],
-                }],
-                userVerification: "required",
+                allowCredentials: [],
+                userVerification: "preferred",
             },
         });
 
