@@ -37,9 +37,24 @@ async function askChatBot(request) {
 }
 
 function parseEventDetails(input) {
-    let match = input.match(/create an event called (.+?) at (\d{1,2}:\d{2}\s*[apm]*) on ([\w\s\d]+)/i);
+    // Updated regex to match "Schedule event called <name> at <time> on <Month Day>"
+    let match = input.match(/schedule event called (.+?) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2})/i);
     if (match) {
-        return { name: match[1].trim(), time: `${match[3].trim()} ${match[2].trim()}` };
+        let name = match[1].trim();
+        let time = match[2].trim();
+        let date = match[3].trim();
+
+        // Convert the date and time into a format that can be stored in Firestore
+        let eventDate = new Date(`${date} ${time}`);
+        if (isNaN(eventDate.getTime())) {
+            console.error("Invalid date format");
+            return null;
+        }
+
+        return { 
+            name: name, 
+            time: eventDate.toISOString() // Store as ISO string for consistency
+        };
     }
     return null;
 }
@@ -49,8 +64,8 @@ async function ruleChatBot(request) {
 
     if (request === "help") {
         appendMessage("Here are some commands you can use:");
-        appendMessage("- **Schedule an event:** 'schedule event called Meeting at 3:00 PM on Monday'");
-        appendMessage("- **Edit an event:** 'edit event Meeting to Team Sync at 4:00 PM on Tuesday'");
+        appendMessage("- **Schedule an event:** 'schedule event called Meeting at 3:00 PM on August 12'");
+        appendMessage("- **Edit an event:** 'edit event Meeting to Team Sync at 4:00 PM on August 13'");
         appendMessage("- **Delete an event:** 'delete event Team Sync'");
         return true;
     }
@@ -59,7 +74,7 @@ async function ruleChatBot(request) {
         let details = parseEventDetails(request);
         if (details) {
             await addEvent(details.name, details.time);
-            appendMessage(`Event '${details.name}' scheduled for ${details.time}.`);
+            appendMessage(`Event '${details.name}' scheduled for ${new Date(details.time).toLocaleString()}.`);
         } else {
             appendMessage("Could not understand the event details.");
         }
@@ -78,13 +93,22 @@ async function ruleChatBot(request) {
     }
 
     if (request.startsWith("edit event")) {
-        let match = request.match(/edit event (.+) to (.+) at (\d{1,2}:\d{2}\s*[apm]*) on ([\w\s\d]+)/i);
+        // Updated regex to match "edit event <oldName> to <newName> at <time> on <Month Day>"
+        let match = request.match(/edit event (.+) to (.+) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2})/i);
         if (match) {
             let oldName = match[1].trim();
             let newName = match[2].trim();
-            let newTime = `${match[4]} ${match[3]}`;
-            let updated = await editEventByName(oldName, newName, newTime);
-            appendMessage(updated ? `Event '${oldName}' updated to '${newName}' at ${newTime}.` : `No event found named '${oldName}'.`);
+            let time = match[3].trim();
+            let date = match[4].trim();
+
+            let newTime = new Date(`${date} ${time}`);
+            if (isNaN(newTime.getTime())) {
+                appendMessage("Invalid date or time format.");
+                return true;
+            }
+
+            let updated = await editEventByName(oldName, newName, newTime.toISOString());
+            appendMessage(updated ? `Event '${oldName}' updated to '${newName}' at ${newTime.toLocaleString()}.` : `No event found named '${oldName}'.`);
         } else {
             appendMessage("Could not understand the edit request.");
         }
@@ -135,6 +159,7 @@ function appendMessage(message) {
 // Display initial chatbot message
 document.addEventListener("DOMContentLoaded", () => {
     appendMessage("Hello! If you need help with creating events, type 'help'.");
+    appendMessage("Example: 'schedule event called Team Meeting at 3:00 PM on August 12'");
 });
 
 document.getElementById("send-btn").addEventListener("click", async () => {
