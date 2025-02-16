@@ -42,6 +42,49 @@ loginBtn.addEventListener("click", async () => {
     }
 });
 
+async function registerBiometricCredential() {
+    if (!window.PublicKeyCredential) {
+        alert("Your browser does not support WebAuthn.");
+        return;
+    }
+
+    try {
+        // Generate a random challenge
+        const challenge = new Uint8Array(32);
+        window.crypto.getRandomValues(challenge);
+
+        const publicKeyOptions = {
+            challenge: challenge,
+            rp: {
+                name: "Event Scheduler",
+                id: window.location.hostname,
+            },
+            user: {
+                id: new Uint8Array(16), // User ID (should be a real unique ID)
+                name: emailInput.value,
+                displayName: emailInput.value,
+            },
+            pubKeyCredParams: [{ alg: -7, type: "public-key" }], // ECDSA w/ SHA-256
+            authenticatorSelection: {
+                authenticatorAttachment: "platform", // Use built-in authenticators
+                userVerification: "required",
+            },
+            timeout: 60000,
+        };
+
+        const credential = await navigator.credentials.create({ publicKey: publicKeyOptions });
+
+        if (credential) {
+            console.log("Passkey registered successfully:", credential);
+            alert("Passkey registered! You can now use it to log in.");
+        }
+    } catch (error) {
+        console.error("Passkey registration failed:", error);
+        alert("Failed to register passkey.");
+    }
+}
+
+document.getElementById("signup-btn").addEventListener("click", registerBiometricCredential);
 // Handle Signup
 signupBtn.addEventListener("click", async () => {
     const email = emailInput.value;
@@ -86,7 +129,7 @@ onAuthStateChanged(auth, (user) => {
 // Biometric Authentication
 biometricBtn.addEventListener("click", async () => {
     if (!window.PublicKeyCredential) {
-        alert("Biometric authentication is not supported in this browser.");
+        alert("Your browser does not support WebAuthn.");
         return;
     }
 
@@ -94,21 +137,24 @@ biometricBtn.addEventListener("click", async () => {
         const challenge = new Uint8Array(32);
         window.crypto.getRandomValues(challenge);
 
-        const credential = await navigator.credentials.get({
-            publicKey: {
-                challenge: challenge,
-                allowCredentials: [],
-                userVerification: "preferred",
-            },
-        });
+        const assertionOptions = {
+            challenge: challenge,
+            allowCredentials: [],
+            userVerification: "required",
+        };
 
-        console.log("Biometric authentication successful:", credential);
-        authContainer.style.display = "none";
-        appContainer.style.display = "block";
-        logoutBtn.style.display = "block";
+        const credential = await navigator.credentials.get({ publicKey: assertionOptions });
+
+        if (credential) {
+            console.log("Biometric login successful:", credential);
+            alert("Biometric authentication successful!");
+            authContainer.style.display = "none";
+            appContainer.style.display = "block";
+            logoutBtnMain.style.display = "block";
+        }
     } catch (error) {
         console.error("Biometric authentication failed:", error);
-        alert("Biometric authentication failed. Please try again.");
+        alert("Failed to authenticate with biometrics.");
     }
 });
 
