@@ -12,22 +12,23 @@
 
     <!-- Authentication Section -->
     <div id="auth-container">
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
+        <input type="email" id="email" placeholder="Email" required autocomplete="on">
+        <input type="password" id="password" placeholder="Password" required autocomplete="off">
         <button id="login-btn">Login</button>
         <button id="signup-btn">Sign Up</button>
-        <button id="logout-btn" style="display:none;">Logout</button>
+        <button id="logout-btn" style="display:none;">Logout</button> <!-- Kept for visibility toggle -->
+        <button id="biometric-btn">Login with Biometrics</button>
     </div>
 
     <!-- Event Scheduler (Hidden until authenticated) -->
     <div id="app-container" style="display: none;">
         <form id="event-form">
-            <input type="text" id="event-name" placeholder="Event Name" required>
+            <input type="text" id="event-name" placeholder="Event Name" required autocomplete="off">
 
             <label for="event-date">Date:</label>
-            <input type="date" id="event-date" required>
+            <input type="date" id="event-date" required autocomplete="off">
 
-            <label for="event-time">Time:</label>
+            <label for="hour-selector">Time:</label>
             <div class="time-picker">
                 <select id="hour-selector"></select> :
                 <select id="minute-selector"></select>
@@ -42,9 +43,12 @@
         <!-- Chatbot Section -->
         <div id="chatbot-container">
             <div id="chat-history"></div>
-            <input type="text" id="chat-input" placeholder="Type a message...">
+            <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
             <button id="send-btn">Send</button>
         </div>
+
+        <!-- Updated logout button ID to avoid conflicts -->
+        <button id="logout-btn-main">Sign Out</button> 
     </div>
 
     <script type="module" src="script.js"></script>

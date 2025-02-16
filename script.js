@@ -23,7 +23,8 @@ export { db, auth };
 // Authentication Elements
 const loginBtn = document.getElementById("login-btn");
 const signupBtn = document.getElementById("signup-btn");
-const logoutBtn = document.getElementById("logout-btn");
+const logoutBtnMain = document.getElementById("logout-btn-main");
+const biometricBtn = document.getElementById("biometric-btn");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
 const authContainer = document.getElementById("auth-container");
@@ -53,26 +54,65 @@ signupBtn.addEventListener("click", async () => {
     }
 });
 
-// Handle Logout
-logoutBtn.addEventListener("click", async () => {
+
+logoutBtnMain.addEventListener("click", async () => {
     try {
         await signOut(auth);
-        console.log("User logged out");
+        console.log("User signed out");
+
+        // Reset UI after logout
+        authContainer.style.display = "block";
+        appContainer.style.display = "none";
     } catch (error) {
-        alert("Logout Failed: " + error.message);
+        console.error("Sign-out error:", error);
     }
 });
+
 
 // Check Auth State
 onAuthStateChanged(auth, (user) => {
     if (user) {
         authContainer.style.display = "none";
         appContainer.style.display = "block";
-        logoutBtn.style.display = "block";
+        logoutBtnMain.style.display = "block"; // ✅ FIXED
     } else {
         authContainer.style.display = "block";
         appContainer.style.display = "none";
-        logoutBtn.style.display = "none";
+        logoutBtnMain.style.display = "none"; // ✅ FIXED
+    }
+});
+
+
+// Biometric Authentication
+biometricBtn.addEventListener("click", async () => {
+    if (!window.PublicKeyCredential) {
+        alert("Biometric authentication is not supported in this browser.");
+        return;
+    }
+
+    try {
+        const challenge = new Uint8Array(32); // Random challenge
+        window.crypto.getRandomValues(challenge);
+
+        const credential = await navigator.credentials.get({
+            publicKey: {
+                challenge: challenge,
+                allowCredentials: [{
+                    type: "public-key",
+                    id: new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]), // Dummy ID
+                    transports: ["internal"],
+                }],
+                userVerification: "required",
+            },
+        });
+
+        console.log("Biometric authentication successful:", credential);
+        authContainer.style.display = "none";
+        appContainer.style.display = "block";
+        logoutBtn.style.display = "block";
+    } catch (error) {
+        console.error("Biometric authentication failed:", error);
+        alert("Biometric authentication failed. Please try again.");
     }
 });
 
@@ -86,7 +126,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const minuteSelector = document.getElementById("minute-selector");
 
     if (hourSelector && minuteSelector) {
-        // Populate hours (0-23)
         for (let i = 0; i < 24; i++) {
             let hour = document.createElement("option");
             hour.value = i.toString().padStart(2, "0");
@@ -94,7 +133,6 @@ document.addEventListener("DOMContentLoaded", function () {
             hourSelector.appendChild(hour);
         }
 
-        // Populate minutes (0-59)
         for (let i = 0; i < 60; i++) {
             let minute = document.createElement("option");
             minute.value = i.toString().padStart(2, "0");

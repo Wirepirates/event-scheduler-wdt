@@ -113,6 +113,25 @@ button:hover {
     transform: scale(1.05);
 }
 
+/* Biometric Button Styling */
+#biometric-btn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s, transform 0.2s;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#biometric-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.05);
+}
+
 /* Chatbot */
 #chatbot-container {
     width: 100%;

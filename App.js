@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "https://esm.sh/@google/generative-ai";
 import { getDoc, doc, collection, addDoc, updateDoc, deleteDoc, getDocs } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-firestore.js";
-import { db } from "./script.js"; // Ensure `db` is exported in script.js
+import { db } from "./script.js"; 
 
 let apiKey = null, genAI = null, model = null;
 
@@ -25,7 +25,6 @@ async function askChatBot(request) {
         let response = await model.generateContent(request);
         console.log("Full AI Response:", JSON.stringify(response, null, 2));
 
-        // Correct response extraction
         let messageText = response?.response?.candidates?.[0]?.content?.parts?.[0]?.text || "Error: AI response format incorrect.";
 
         console.log("Extracted AI Message:", messageText);
@@ -37,14 +36,12 @@ async function askChatBot(request) {
 }
 
 function parseEventDetails(input) {
-    // Updated regex to match "Schedule event called <name> at <time> on <Month Day>"
-    let match = input.match(/schedule event called (.+?) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2})/i);
+    let match = input.match(/schedule event called (.+?) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2}, \d{4})/i);
     if (match) {
         let name = match[1].trim();
         let time = match[2].trim();
         let date = match[3].trim();
 
-        // Convert the date and time into a format that can be stored in Firestore
         let eventDate = new Date(`${date} ${time}`);
         if (isNaN(eventDate.getTime())) {
             console.error("Invalid date format");
@@ -53,7 +50,7 @@ function parseEventDetails(input) {
 
         return { 
             name: name, 
-            time: eventDate.toISOString() // Store as ISO string for consistency
+            time: eventDate.toISOString() 
         };
     }
     return null;
@@ -64,8 +61,8 @@ async function ruleChatBot(request) {
 
     if (request === "help") {
         appendMessage("Here are some commands you can use:");
-        appendMessage("- **Schedule an event:** 'schedule event called Meeting at 3:00 PM on August 12'");
-        appendMessage("- **Edit an event:** 'edit event Meeting to Team Sync at 4:00 PM on August 13'");
+        appendMessage("- **Schedule an event:** 'schedule event called Meeting at 3:00 PM on August 12, 2024'");
+        appendMessage("- **Edit an event:** 'edit event Meeting to Team Sync at 4:00 PM on August 13, 2024'");
         appendMessage("- **Delete an event:** 'delete event Team Sync'");
         return true;
     }
@@ -93,8 +90,7 @@ async function ruleChatBot(request) {
     }
 
     if (request.startsWith("edit event")) {
-        // Updated regex to match "edit event <oldName> to <newName> at <time> on <Month Day>"
-        let match = request.match(/edit event (.+) to (.+) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2})/i);
+        let match = request.match(/edit event (.+) to (.+) at (\d{1,2}:\d{2}\s*[apm]*) on (\w+ \d{1,2}, \d{4})/i);
         if (match) {
             let oldName = match[1].trim();
             let newName = match[2].trim();
@@ -159,7 +155,7 @@ function appendMessage(message) {
 // Display initial chatbot message
 document.addEventListener("DOMContentLoaded", () => {
     appendMessage("Hello! If you need help with creating events, type 'help'.");
-    appendMessage("Example: 'schedule event called Team Meeting at 3:00 PM on August 12'");
+    appendMessage("Example: 'schedule event called Team Meeting at 3:00 PM on August 12, 2024'");
 });
 
 document.getElementById("send-btn").addEventListener("click", async () => {
